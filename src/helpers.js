@@ -1,5 +1,7 @@
 const isObject = (val) => val !== null && typeof val === 'object';
 const isBoolean = (val) => val === false || val === true;
+const isString = (va) => val !== null&& typeof val === 'string';
+
 
 const deepMerge = (target = {}, source = {}) => {
   Object.keys(source).forEach((key) => {
@@ -15,4 +17,4 @@ const deepMerge = (target = {}, source = {}) => {
   return target;
 };
 
-module.exports = {isObject, isBoolean, deepMerge};
+module.exports = {isObject, isBoolean, isString, deepMerge};
