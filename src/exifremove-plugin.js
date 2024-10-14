@@ -3,7 +3,7 @@ const util = require('util');
 const glob = require('glob');
 const exifRemove = require("exifremove");
 
-const { isObject, isBoolean, deepMerge } = require('./helpers');
+const { isObject, isBoolean, isString, deepMerge } = require('./helpers');
 
 const pluginName = 'gatsby-plugin-exifremove';
 
