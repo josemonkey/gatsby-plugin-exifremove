@@ -1,6 +1,6 @@
 const isObject = (val) => val !== null && typeof val === 'object';
 const isBoolean = (val) => val === false || val === true;
-const isString = (va) => val !== null&& typeof val === 'string';
+const isString = (val) => val !== null&& typeof val === 'string';
 
 
 const deepMerge = (target = {}, source = {}) => {
