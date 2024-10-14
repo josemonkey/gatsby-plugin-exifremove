@@ -50,7 +50,7 @@ This plugin takes the following options:
 | :-------------------: | :-------: | :-------------------: | :---------------------------------------------------------------------------------------------------------------------------------: |
 | `debug`               | `boolean` | `false`               | Tells the plugin to generate debug output.                                                                                          |
 | `matchPattern`        | `string`  | `"**/*.{jpg,jpeg}"`   | The pattern to use when searching for files under the `public` folder. The string `'public/'` will be added to this as a prefix.    |
-| `exifremove-config`   | `Object`  | (See below)           | Configuration options to pass to exifremove. See below.
+| `exifremoveConfig`   | `Object`  | (See below)           | Configuration options to pass to exifremove. See below.
 
 #### exifremove Configration
 
@@ -75,7 +75,7 @@ module.exports = {
       resolve: 'gatsby-plugin-exifremove',
       options: {
         debug: true, // debug optional, default false
-        matchPattern: "**/*.{jpg,jpeg}" // optional, this is the default value
+        matchPattern: "**/*.{jpg,jpeg}", // optional, this is the default value
         exifremoveConfig: {
           verbose: false,
           keepMarker: false,
@@ -96,6 +96,10 @@ This plugin is modeled after [gatsby-plugin-minify-html](https://github.com/illv
 
 This plugin uses [`exifremove`](https://github.com/Coteh/exifremove) under the covers to process the JPEG files.
 
+## Disclaimer
+
+I threw this plugin together very quickly, so use at your own risk! See the license for more info.
+ 
 ## License
 
 Licensed under [MIT](./LICENSE).
