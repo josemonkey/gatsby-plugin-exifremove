@@ -1,0 +1,29 @@
+{
+  "name": "gatsby-plugin-exifremove",
+  "version": "1.0.0",
+  "description": "Gatsby plugin to remove EXIF data from JPEG images during build",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josemonkey/gatsby-plugin-exifremove.git"
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "exif",
+    "remove",
+    "jpeg"
+  ],
+  "author": "josemonkey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josemonkey/gatsby-plugin-exifremove/issues"
+  },
+  "homepage": "https://github.com/josemonkey/gatsby-plugin-exifremove#readme",
+  "dependencies": {
+    "glob": "^11.0.0"
+  }
+}
