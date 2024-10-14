@@ -2,7 +2,7 @@
 
 [![Issues](https://img.shields.io/github/issues-raw/josemonkey/gatsby-plugin-exifremove)](https://github.com/josemonkey/gatsby-plugin-exifremove)
 
-**A Gatsby plugin for **removing EXIF data from JPEG files at build time.**
+**A Gatsby plugin for removing EXIF data from JPEG files at build time.**
 
 With this plugin, you can strip the EXIF data out of every JPEG file (`.jpg` or `.jpeg`) in the `public` directory of your gatsby project at build time.
 
