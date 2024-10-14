@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/josemonkey/gatsby-plugin-exifremove#readme",
   "dependencies": {
+    "exifremove": "^1.0.1",
     "glob": "^11.0.0"
   }
 }

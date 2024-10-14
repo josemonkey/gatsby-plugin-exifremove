@@ -1,15 +1,17 @@
 const fs = require('fs');
 const util = require('util');
 const glob = require('glob');
-const {isObject, isBoolean, deepMerge} = require('./helpers');
+const exifRemove = require("exifremove");
 
+const { isObject, isBoolean, deepMerge } = require('./helpers');
 
 const readFileAsync = util.promisify(fs.readFile);
 
 const defaultOptions = {
-    debug: true,
+    debug: false,
     config: {
-        dryRun: false,
+        keepMarker: false,
+        verbose: false
     },
 };
 
@@ -35,29 +37,36 @@ async function onPostBuild(args, pluginOptions = {}) {
 
     const processedFiles = files.map(async (file) => {
 
-        console.info(`Reading file ${file}`);
         const data = await readFileAsync(file);
         return new Promise((resolve, reject) => {
+
+            console.info(`Processing ${file}...`);
+
             let scrubbedImage;
             try {
-                // TODO: Do something 
-                scrubbedImage = data;
-            } catch (err) {
-                console.warn(`Error during run a EXIF removal at file ${file}:\n\n${err}`);
-            }
-            const reduced = (((data.length - scrubbedImage.length) / data.length) * 100).toFixed(2);
+                if (options.verbose) {
+                    console.log(`Image file length: ${data.length}`);
+                }
 
-            if (!options.dryRun) {
-                console.info(`Writing file ${file}`);
-                fs.writeFile(file, scrubbedImage, (err) => {
-                    if (err) {
-                        reject();
-                        console.error(`EXIF removal error on write file:\n\n${err}`);
-                    }
-                    options.debug ? console.debug(file, `> reduced ${reduced}%.`) : '';
-                    resolve();
+                scrubbedImage = exifRemove.remove(data, {
+                    keepMarker: options.keepMarker,
+                    verbose: options.verbose
                 });
+
+
+            } catch (err) {
+                console.error(`Error during run a EXIF removal at file ${file}:\n\n${err}`);
+                reject();
             }
+
+            fs.writeFile(file, scrubbedImage, (err) => {
+                if (err) {
+                    reject();
+                    console.error(`EXIF removal error on write file:\n\n${err}`);
+                }
+                resolve();
+            });
+            
 
         });
     });
