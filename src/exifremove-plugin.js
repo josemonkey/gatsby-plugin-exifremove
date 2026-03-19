@@ -21,6 +21,8 @@ const defaultOptions = {
 
 async function onPostBuild(args, pluginOptions = {}) {
 
+    const { reporter } = args;
+
     if (pluginOptions) {
         if (pluginOptions.debug && !isBoolean(pluginOptions.debug)) {
             throw new Error(`${pluginName} error reading options: 'debug' value not a valid boolean value.`);
@@ -34,20 +36,20 @@ async function onPostBuild(args, pluginOptions = {}) {
     }
     const options = deepMerge(defaultOptions, pluginOptions);
 
-    console.info(`Removing EXIF data from JPEG images.`);
+    reporter.info(`Removing EXIF data from JPEG images.`);
 
     const pattern = `public/${options.matchPattern}`;
 
     if (options.debug) {
-        console.log(`Looking for JPEG files with pattern '${pattern}'`);
+        reporter.info(`Looking for JPEG files with pattern '${pattern}'`);
     }
     const files = await glob.glob(pattern, { nodir: true });
     if (options.debug) {
-        console.log(`Files found: ${files.length}`);
+        reporter.info(`Files found: ${files.length}`);
     }
 
     if (options.debug) {
-        console.log(`Using exifremove options: ${JSON.stringify(options.exifremoveConfig)}`);
+        reporter.info(`Using exifremove options: ${JSON.stringify(options.exifremoveConfig)}`);
     }
 
     const pluginStart = new Date().getTime();
@@ -55,13 +57,13 @@ async function onPostBuild(args, pluginOptions = {}) {
     const processedFiles = files.map(async (file) => {
 
         if (options.debug) {
-            console.info(`Reading ${file}...`);
+            reporter.info(`Reading ${file}...`);
         }
         const data = await readFileAsync(file);
 
         return new Promise((resolve, reject) => {
 
-            console.info(`Processing ${file}...`);
+            reporter.info(`Processing ${file}...`);
 
             let scrubbedImage;
             try {
@@ -73,17 +75,17 @@ async function onPostBuild(args, pluginOptions = {}) {
 
 
             } catch (err) {
-                console.error(`Error during run a EXIF removal at file ${file}:\n\n${err}`);
+                reporter.error(`Error during run a EXIF removal at file ${file}`, err);
                 reject();
             }
 
             fs.writeFile(file, scrubbedImage, (err) => {
                 if (options.debug) {
-                    console.info(`Writing ${file}...`);
+                    reporter.info(`Writing ${file}...`);
                 }
                 if (err) {
                     reject();
-                    console.error(`EXIF removal error on write file:\n\n${err}`);
+                    reporter.error(`EXIF removal error on write file`, err);
                 }
                 resolve();
             });
@@ -94,7 +96,7 @@ async function onPostBuild(args, pluginOptions = {}) {
     await Promise.all(processedFiles);
 
     const pluginEnd = new Date().getTime();
-    console.info(`EXIF removal done in ${(pluginEnd - pluginStart) / 1000} sec`);
+    reporter.info(`EXIF removal done in ${(pluginEnd - pluginStart) / 1000} sec`);
 }
 
 exports.onPostBuild = onPostBuild;
