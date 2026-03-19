@@ -130,3 +130,9 @@ dist
 .pnp.*
 
 .DS_Store
+
+
+# specific exclusions
+/gatsby-node.js
+/exifremove-plugin.js
+/helpers.js

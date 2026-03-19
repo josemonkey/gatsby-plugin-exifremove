@@ -1,5 +1,5 @@
 'use strict';
 
-const exifRemovePlugin = require('./src/exifremove-plugin');
+const exifRemovePlugin = require('./exifremove-plugin');
 
 exports.onPostBuild = exifRemovePlugin.onPostBuild;
