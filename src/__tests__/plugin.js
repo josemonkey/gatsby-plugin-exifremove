@@ -18,6 +18,10 @@ const MOCK_JPEG_FILES = [
     'another_file.jpeg',
 ];
 
+
+const mockImageData = 'This is image data with EXIF embedded.';
+const mockScrubbedImageData = 'This is image data WITHOUT ANY EXIF embedded!';
+
 const pluginOptions = {
     debug: false,
     matchPattern: "**/*.{jpg,jpeg}",
@@ -38,14 +42,18 @@ describe("plugin", () => {
 
         glob.__setMockFiles(MOCK_JPEG_FILES);
 
-        const mockContent = 'test data';
         readFileMock.mockImplementation((_, callback) => {
             // Arguments are (error, data)
-            callback(null, mockContent);
+            callback(null, mockImageData);
         });
 
         writeFileMock.mockImplementation((filename, data, callback) => {
             callback(null);
+
+        });
+
+        removeMock.mockImplementation((data, options) => {
+            return mockScrubbedImageData;
 
         });
 
@@ -58,11 +66,32 @@ describe("plugin", () => {
 
     it('onPostBuild processes files', async () => { // Mark the test as async
 
-        const result = await gatsbyNode.onPostBuild(null, pluginOptions);
+        const args = {
+            reporter: {
+                info(message) {
+                    // noop
+                },
+                warn(message) {
+                    console.warn(message);
+                },
+                error(message, err) {
+                    console.error(message, err);
+                }
+            },
+        };
+        const result = await gatsbyNode.onPostBuild(args, pluginOptions);
 
         expect(readFileMock).toHaveBeenCalledTimes(MOCK_JPEG_FILES.length);
         expect(removeMock).toHaveBeenCalledTimes(MOCK_JPEG_FILES.length);
         expect(writeFileMock).toHaveBeenCalledTimes(MOCK_JPEG_FILES.length);
+
+        MOCK_JPEG_FILES.forEach((mockFilename, index) => {
+
+            expect(readFileMock).toHaveBeenNthCalledWith(index + 1, mockFilename, expect.any(Function));
+            expect(removeMock).toHaveBeenNthCalledWith(index + 1, mockImageData, pluginOptions.exifremoveConfig);
+            expect(writeFileMock).toHaveBeenNthCalledWith(index + 1, mockFilename, mockScrubbedImageData, expect.any(Function));
+
+        });
 
     });
 
