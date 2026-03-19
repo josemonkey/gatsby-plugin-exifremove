@@ -133,6 +133,6 @@ dist
 
 
 # specific exclusions
-#/gatsby-node.js
-#/exifremove-plugin.js
-#/helpers.js
+/gatsby-node.js
+/exifremove-plugin.js
+/helpers.js
