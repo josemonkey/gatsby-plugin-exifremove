@@ -136,3 +136,4 @@ dist
 /gatsby-node.js
 /exifremove-plugin.js
 /helpers.js
+/options-validation.js
