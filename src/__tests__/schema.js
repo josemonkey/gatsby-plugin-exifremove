@@ -43,7 +43,7 @@ describe("schema test", () => {
         jest.clearAllMocks();
     });
 
-    it('validates valid schema', () => { 
+    it('validates valid options', () => { 
         const { error, value } = schema.validate(completeOptionsExample);
         expect(error).toBe(undefined);
     });
@@ -54,18 +54,18 @@ describe("schema test", () => {
     });
 
 
-    it('catches invalid schema (bad pattern val)', () => { 
+    it('catches invalid options (bad pattern val)', () => { 
         const { error, value } = schema.validate(invalidOptionsExampleBadPattern);
         expect(error).not.toBe(undefined);
     });
 
 
-    it('catches invalid schema (bad debug val)', () => { 
+    it('catches invalid options (bad debug val)', () => { 
         const { error, value } = schema.validate(invalidOptionsExampleBadDebugValue);
         expect(error).not.toBe(undefined);
     });
 
-    it('catches invalid schema (bad exifremoveConfig val)', () => { 
+    it('catches invalid options (bad exifremoveConfig val)', () => { 
         const { error, value } = schema.validate(invalidOptionsExampleBadExifRemValue);
         expect(error).not.toBe(undefined);
     });
