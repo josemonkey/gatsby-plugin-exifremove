@@ -3,60 +3,33 @@ const util = require('util');
 const glob = require('glob');
 const exifRemove = require("exifremove");
 
-const { isObject, isBoolean, isString, deepMerge } = require('./helpers');
-
-const pluginName = 'gatsby-plugin-exifremove';
-
 const readFileAsync = util.promisify(fs.readFile);
-
-const defaultOptions = {
-    debug: false,
-    matchPattern: "**/*.{jpg,jpeg}",
-    exifremoveConfig: {
-        keepMarker: false,
-        verbose: false
-    },
-};
-
 
 async function onPostBuild(args, pluginOptions = {}) {
 
     const { reporter } = args;
 
-    if (pluginOptions) {
-        if (pluginOptions.debug && !isBoolean(pluginOptions.debug)) {
-            throw new Error(`${pluginName} error reading options: 'debug' value not a valid boolean value.`);
-        }
-        if (pluginOptions.matchPattern && !isString(pluginOptions.matchPattern)) {
-            throw new Error(`${pluginName} error reading options: 'matchPattern' value not a string.`);
-        }
-        if (pluginOptions.exifremoveConfig && !isObject(pluginOptions.exifremoveConfig)) {
-            throw new Error(`${pluginName} error reading options: 'exifremoveConfig' value not an object.`);
-        }
-    }
-    const options = deepMerge(defaultOptions, pluginOptions);
-
     reporter.info(`Removing EXIF data from JPEG images.`);
 
-    const pattern = `public/${options.matchPattern}`;
+    const pattern = `public/${pluginOptions.matchPattern}`;
 
-    if (options.debug) {
+    if (pluginOptions.debug) {
         reporter.info(`Looking for JPEG files with pattern '${pattern}'`);
     }
     const files = await glob.glob(pattern, { nodir: true });
-    if (options.debug) {
+    if (pluginOptions.debug) {
         reporter.info(`Files found: ${files.length}`);
     }
 
-    if (options.debug) {
-        reporter.info(`Using exifremove options: ${JSON.stringify(options.exifremoveConfig)}`);
+    if (pluginOptions.debug) {
+        reporter.info(`Using exifremove options: ${JSON.stringify(pluginOptions.exifremoveConfig)}`);
     }
 
     const pluginStart = new Date().getTime();
 
     const processedFiles = files.map(async (file) => {
 
-        if (options.debug) {
+        if (pluginOptions.debug) {
             reporter.info(`Reading ${file}...`);
         }
         const data = await readFileAsync(file);
@@ -69,8 +42,8 @@ async function onPostBuild(args, pluginOptions = {}) {
             try {
 
                 scrubbedImage = exifRemove.remove(data, {
-                    keepMarker: options.exifremoveConfig.keepMarker,
-                    verbose: options.exifremoveConfig.verbose
+                    keepMarker: pluginOptions.exifremoveConfig.keepMarker,
+                    verbose: pluginOptions.exifremoveConfig.verbose
                 });
 
 
@@ -80,7 +53,7 @@ async function onPostBuild(args, pluginOptions = {}) {
             }
 
             fs.writeFile(file, scrubbedImage, (err) => {
-                if (options.debug) {
+                if (pluginOptions.debug) {
                     reporter.info(`Writing ${file}...`);
                 }
                 if (err) {
